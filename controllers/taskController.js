@@ -4,10 +4,17 @@ const storeService = require('../services/storeService');
 const getTasks = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { status, search } = req.query;
+    const { status, search, page = 1, limit = 10 } = req.query;
 
-    const tasks = await storeService.getTasksByUser(userId, { status, search });
-    return res.status(200).json({ success: true, count: tasks.length, tasks });
+    const result = await storeService.getTasksByUser(userId, { status, search, page, limit });
+    return res.status(200).json({
+      success: true,
+      count: result.tasks.length,
+      totalTasks: result.totalTasks,
+      page: result.page,
+      totalPages: result.totalPages,
+      tasks: result.tasks
+    });
   } catch (error) {
     console.error('[Get Tasks Error]', error);
     return res.status(500).json({ success: false, message: 'Server error retrieving tasks' });

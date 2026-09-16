@@ -68,8 +68,12 @@ const storeService = {
   },
 
   // --- TASK OPERATIONS ---
-  async getTasksByUser(userId, { status, search }) {
+  async getTasksByUser(userId, { status, search, page = 1, limit = 10 }) {
     const { isConnected } = getDbStatus();
+
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 10;
+    const skip = (pageNum - 1) * limitNum;
 
     if (isConnected) {
       const query = { user: userId };
@@ -82,7 +86,10 @@ const storeService = {
           { description: { $regex: search, $options: 'i' } }
         ];
       }
-      return await Task.find(query).sort({ createdAt: -1 });
+      const totalTasks = await Task.countDocuments(query);
+      const tasks = await Task.find(query).sort({ createdAt: -1 }).skip(skip).limit(limitNum);
+      const totalPages = Math.ceil(totalTasks / limitNum) || 1;
+      return { tasks, totalTasks, page: pageNum, totalPages };
     } else {
       let tasks = memoryTasks.filter(t => t.user.toString() === userId.toString());
       if (status && ['Planned', 'In Progress', 'Complete'].includes(status)) {
@@ -95,7 +102,11 @@ const storeService = {
           (t.description && t.description.toLowerCase().includes(term))
         );
       }
-      return tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      const totalTasks = tasks.length;
+      const sorted = tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      const paginated = sorted.slice(skip, skip + limitNum);
+      const totalPages = Math.ceil(totalTasks / limitNum) || 1;
+      return { tasks: paginated, totalTasks, page: pageNum, totalPages };
     }
   },
 
