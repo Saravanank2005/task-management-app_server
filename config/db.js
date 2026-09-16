@@ -4,7 +4,7 @@ let isConnected = false;
 let isInMemoryFallback = false;
 
 const connectDB = async () => {
-  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/taskmanager';
+  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/kovai_task';
   
   try {
     mongoose.set('strictQuery', false);
@@ -12,7 +12,7 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 3000 // 3 seconds timeout before fallback
     });
     isConnected = true;
-    console.log(`[Database] MongoDB Connected Successfully: ${mongoose.connection.host}`);
+    console.log(`[Database] MongoDB Connected Successfully: ${mongoose.connection.host} (DB: ${mongoose.connection.name})`);
   } catch (error) {
     console.warn(`[Database Warning] Could not connect to MongoDB at ${uri}: ${error.message}`);
     console.warn(`[Database Warning] Activating robust In-Memory Store Fallback for instant evaluation & testing.`);
