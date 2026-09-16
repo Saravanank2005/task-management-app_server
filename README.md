@@ -1,60 +1,45 @@
-# Task360 - Simple Task Management Application
+# Task360 - Backend Server API
 
-> **Graduate Support Engineer Trainee Assessment Submission**
+> **Task360 Express & Node.js API**
 
-Task360 is a full-stack task management application built with **React (JSX)**, **Vanilla CSS**, **Node.js**, **Express**, **MongoDB Atlas**, and **Google Authentication**.
-
----
-
-## ⚡ Quick Start
-
-### 1. Run Backend Server
-```bash
-cd server
-npm install
-npm start
-```
-*Server runs on `http://localhost:5000`*
-
-### 2. Run Frontend Client
-```bash
-cd client
-npm install
-npm run dev
-```
-*Frontend runs on `http://localhost:3000`*
+Task360 backend is a REST API built with **Node.js**, **Express**, **JWT Authentication**, and **MongoDB Atlas** (`kovai_task` database).
 
 ---
 
-## 🚀 Key Features
-
-- **Google Authentication & Demo Mode**: Sign in with your Google account or click **"Task360 Demo Account"** for instant cross-device testing.
-- **Create & Manage Tasks**: Add tasks with title and description.
-- **Status Workflows**: Track task progress across **Planned**, **In Progress**, and **Complete** states.
-- **Filter & Search**: Easily filter tasks by state or use the real-time search bar.
-- **MongoDB Atlas Storage**: All user data and tasks are stored persistently in the `kovai_task` MongoDB Atlas database.
+## 🌐 Live API URL
+- **Live Deployed Server API**: [https://task-management-app-server-uc6q.onrender.com](https://task-management-app-server-uc6q.onrender.com)
+- **Health Check**: [https://task-management-app-server-uc6q.onrender.com/api/health](https://task-management-app-server-uc6q.onrender.com/api/health)
 
 ---
 
-## 💡 Important Notes & Assumptions
+## ⚡ How to Run Locally (Offline / Dev Mode)
 
-- **User Isolation**: Users can strictly view and edit their own tasks.
-- **Task Lifecycle**: Every task belongs to one of three states (`Planned`, `In Progress`, `Complete`).
-- **Resilient Fallback**: If database connection is unavailable, the backend automatically uses an in-memory store so testing is never interrupted.
+1. Open terminal in the `server` folder.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create `.env` file (refer to `.env.example`):
+   ```env
+   PORT=5000
+   MONGODB_URI=mongodb+srv://saravanan:amada1234@cluster0.1d6gi.mongodb.net/kovai_task?retryWrites=true&w=majority
+   JWT_SECRET=kovai_task_manager_jwt_secret_key_2026_spec
+   GOOGLE_CLIENT_ID=674600937844-sbkl3phfi8g8cene5ektcco0rnac5ja2.apps.googleusercontent.com
+   ```
+4. Start backend server:
+   ```bash
+   npm start
+   ```
+5. API server runs locally on `http://localhost:5000`.
 
 ---
 
-## 🛠️ Environment Configuration
+## 📡 Essential REST API Endpoints
 
-### Backend (`server/.env`)
-```env
-PORT=5000
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.1d6gi.mongodb.net/kovai_task?retryWrites=true&w=majority
-JWT_SECRET=kovai_task_manager_jwt_secret_key_2026_spec
-GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
-```
-
-### Frontend (`client/.env`)
-```env
-VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
-```
+- `POST /api/auth/google` — Authenticate user (Google OAuth / Demo Account)
+- `GET /api/auth/me` — Get current user profile
+- `GET /api/tasks` — Fetch user tasks (supports search & status filters)
+- `POST /api/tasks` — Create new task
+- `PATCH /api/tasks/:id/status` — Update status (`Planned`, `In Progress`, `Complete`)
+- `PUT /api/tasks/:id` — Edit task details
+- `DELETE /api/tasks/:id` — Delete task
