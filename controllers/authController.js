@@ -12,11 +12,17 @@ const generateToken = (id) => {
 
 const handleGoogleAuth = async (req, res) => {
   try {
-    const { credential, isDemo } = req.body;
+    const { credential, isDemo, testEmail, testGoogleId, name: customName } = req.body;
 
     let googleId, email, name, picture;
 
-    if (isDemo) {
+    if (testEmail || testGoogleId) {
+      // Postman helper to test API as a specific user saved in MongoDB Atlas
+      email = testEmail || 'saravanank20051012@gmail.com';
+      googleId = testGoogleId || '101611468333698031623';
+      name = customName || 'Saravanan K';
+      picture = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=6366f1&color=fff`;
+    } else if (isDemo) {
       // Persistent global Demo Account saved in MongoDB Atlas
       googleId = 'google_demo_task360_user';
       email = 'demo.user@task360.app';
@@ -62,7 +68,7 @@ const handleGoogleAuth = async (req, res) => {
     return res.status(200).json({
       token,
       isNewUser,
-      message: isNewUser ? 'Welcome to Task360! Demo account initialized in MongoDB Atlas.' : 'Welcome back to Task360!',
+      message: isNewUser ? 'Welcome to Task360! Account created in MongoDB Atlas.' : 'Welcome back to Task360!',
       user: {
         id: user._id,
         googleId: user.googleId,
