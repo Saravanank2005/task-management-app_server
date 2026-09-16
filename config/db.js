@@ -9,6 +9,7 @@ const connectDB = async () => {
   try {
     mongoose.set('strictQuery', false);
     await mongoose.connect(uri, {
+      dbName: 'kovai_task', // Force Mongoose to connect directly to kovai_task database
       serverSelectionTimeoutMS: 3000 // 3 seconds timeout before fallback
     });
     isConnected = true;
